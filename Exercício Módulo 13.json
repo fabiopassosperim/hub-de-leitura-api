@@ -1,0 +1,449 @@
+{
+  "info": {
+    "_postman_id": "4868861f-43ad-47ae-9359-caede88ffe0b",
+    "name": "Exercício Módulo 13",
+    "description": "### Welcome to Postman! This is your first collection. \n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests\n• Test your API in real-world scenarios\n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "59443087",
+    "_collection_link": "https://go.postman.co/collection/59443087-4868861f-43ad-47ae-9359-caede88ffe0b?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "TOKEN",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"admin@biblioteca.com\",\n  \"password\": \"admin123\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Consulta d'A Menina que Roubava Livros",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status HTTP deve ser 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"O livro tem de ser A Menina que Roubava Livros\", function () {\n    const response = pm.response.json();\n    const book = response.book || response;\n\n    pm.expect(book.title).to.eql(\"A Menina que Roubava Livros\");\n});\n\npm.test(\"O autor tem de ser Markus Zusak\", function () {\n    const response = pm.response.json();\n    const book = response.book || response;\n\n    pm.expect(book.author).to.eql(\"Markus Zusak\");\n});\n\npm.test(\"O ID tem de ser 8\", function () {\n    const response = pm.response.json();\n    const book = response.book || response;\n\n    pm.expect(book.id).to.eql(8);\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/books/8",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "books",
+            "8"
+          ]
+        },
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+      },
+      "response": []
+    },
+    {
+      "name": "Busca de livro inexistente",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status tem de ser 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const response = pm.response.json();",
+              "",
+              "pm.test(\"Lista de livros deve aparecer vazia\", function () {",
+              "    pm.expect(response.books).to.be.an(\"array\").that.is.empty;",
+              "});",
+              "",
+              "pm.test(\"Total tem de ser zero\", function () {",
+              "    pm.expect(response.pagination.total).to.eql(0);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/books?search=Harry%20Potter%208&available=true&orderBy=title&order=ASC",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "books"
+          ],
+          "query": [
+            {
+              "key": "search",
+              "value": "Harry%20Potter%208"
+            },
+            {
+              "key": "available",
+              "value": "true"
+            },
+            {
+              "key": "orderBy",
+              "value": "title"
+            },
+            {
+              "key": "order",
+              "value": "ASC"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Consulta com ID inexistente",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status 404 deve aparecer\", function () {",
+              "    pm.response.to.have.status(404);",
+              "});",
+              "",
+              "const response = pm.response.json();",
+              "",
+              "pm.test(\"Deve informar erro\", function () {",
+              "    pm.expect(response).to.have.property(\"message\");",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/books/666",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "books",
+            "666"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Inclusão do Advogado do Diabo",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status deve ser 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "const response = pm.response.json();",
+              "",
+              "pm.test(\"Livro deve retornar um ID\", function () {",
+              "    pm.expect(response).to.have.property(\"id\");",
+              "});",
+              "",
+              "pm.test(\"Livro cadastrado deve ter o título correto\", function () {",
+              "    pm.expect(response.title).to.eql(\"Advogado do Diabo\");",
+              "});",
+              "",
+              "pm.collectionVariables.set(\"bookId\", response.id);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{json_web_token_08a5}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Avdogado do Diabo\",\n  \"author\": \"Andrew Neiderman\",\n  \"description\": \"Romance sobre ganância e amoralidade\",\n  \"category\": \"Literatura Estrangeira\",\n  \"isbn\": \"68954367895432\",\n  \"editor\": \"Editora Record\",\n  \"language\": \"Português\",\n  \"publication_year\": 1990,\n  \"pages\": 300,\n  \"format\": \"Físico\",\n  \"total_copies\": 10,\n  \"available_copies\": 10\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/books/",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "books",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Retirada de duas cópias",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status deve ser 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const response = pm.response.json();",
+              "",
+              "pm.test(\"Livro deve continuar cadastrado\", function () {",
+              "    pm.expect(response).to.exist;",
+              "});",
+              "",
+              "pm.test(\"Quantidade disponível deve ser 8\", function () {",
+              "    pm.expect(response.available_copies).to.eql(8);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{json_web_token_08a5}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Avdogado do Diabo\",\n  \"author\": \"Andrew Neiderman\",\n  \"description\": \"Romance sobre ganância e amoralidade\",\n  \"category\": \"Literatura Estrangeira\",\n  \"isbn\": \"68954367895432\",\n  \"editor\": \"Editora Record\",\n  \"language\": \"Português\",\n  \"publication_year\": 1990,\n  \"pages\": 300,\n  \"format\": \"Físico\",\n  \"total_copies\": 10,\n  \"available_copies\": 8\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/books/27",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "books",
+            "27"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Exclusão do Advogado do Diabo",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status deve ser 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Resposta deve confirmar a exclusão\", function () {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response).to.have.property(\"message\");",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{json_web_token_08a5}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/books/27",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "books",
+            "27"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Busca por Advogado do Diabo",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/books/27",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "books",
+            "27"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "json_web_token_06pa",
+      "secret": true
+    },
+    {
+      "key": "auth_secret_0ici",
+      "secret": true,
+      "source": {
+        "provider": "postman",
+        "postman": {
+          "type": "cloud",
+          "secretId": "f8816707-af5f-4678-b3ae-25a2fe71c96b",
+          "vaultId": "b2c967ab-abc7-4496-b479-e33da5ffede0"
+        }
+      }
+    },
+    {
+      "key": "json_web_token_0dh8",
+      "secret": true,
+      "source": {
+        "provider": "postman",
+        "postman": {
+          "type": "cloud",
+          "secretId": "def1aca3-fe78-468d-88a8-4ed993cf3882",
+          "vaultId": "b2c967ab-abc7-4496-b479-e33da5ffede0"
+        }
+      }
+    },
+    {
+      "key": "json_web_token_08a5",
+      "secret": true,
+      "source": {
+        "provider": "postman",
+        "postman": {
+          "type": "cloud",
+          "secretId": "35993f2f-b0ed-49ec-bfda-e4924f56e06c",
+          "vaultId": "b2c967ab-abc7-4496-b479-e33da5ffede0"
+        }
+      }
+    },
+    {
+      "key": "bookId",
+      "value": ""
+    }
+  ]
+}
